@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <link rel="canonical" href="https://tsumiki.app">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="勉強とともにタイマーをスタートし、作業時間を記録しましょう。">
+    <title data-i18n="title">ツミキ | 勉強時間管理ツール - 自分好みにカスタマイズできる勉強時間管理ツール</title>
+    <link rel="shortcut icon" href="https://tsumiki.app/favicon.ico">
+    <link rel="shortcut icon" type="image/webp" href="https://tsumiki.app/favicon.webp">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://tsumiki.app/apple-touch-icon.png">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+
+<!-- PCヘッダー -->
+<header id="mainHeader" class="pc-only">
+  <div class="logo">
+    <a href="https://about.tsumiki.app/">
+      <img src="https://tsumiki.app/1024,1024_icon.png" alt="LOGO">
+    </a>
+  </div>
+
+  <div class="list">
+    <ul>
+      <li><a href="https://about.tsumiki.app/">HOME</a></li>
+      <li><a href="https://tsumiki.app/">TSUMIKI.APP</a></li>
+      <li><a href="https://about.tsumiki.app/blog/">BLOG</a></li>
+    </ul>
+  </div>
+
+  <div class="hamburger-wrapper">
+    <button id="menuToggle" class="hamburger">
+      <img src="sozai/images/menu.webp" alt="Menu" class="hamburger-icon">
+    </button>
+
+    <!-- PCドロップダウンナビ -->
+    <nav id="pcDropdown" class="navigation-dropdown pc-only hidden">
+      <div class="nav-content">
+        <ul class="list">
+          <li><a href="https://x.com/tsumiki_app">X (Twitter)</a></li>
+          <li><a href="https://discord.gg/Sv7gH7JujJ">Discord</a></li>
+          <li><a href="https://youtube.com/@tsumiki_app">Youtube</a></li>
+          <li><a href="https://note.com/@kokyujene">Note</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- スマホハンバーガー -->
+<div class="hamburger-float mobile-only">
+  <button id="mobileMenuToggle" class="hamburger">
+    <img src="sozai/images/menu.webp" alt="Menu" class="hamburger-icon">
+  </button>
+</div>
+
+<!-- スマホ全画面ナビ -->
+<nav id="mobileFullscreen" class="mobile-fullscreen hidden">
+  <div class="mobile-nav-content">
+    <div class="mobile-nav-logo">
+      <a href="https://about.tsumiki.app/">
+        <img src="https://tsumiki.app/1024,1024_icon.png" alt="LOGO">
+      </a>
+    </div>
+    
+    <ul class="list">
+      <li><a href="https://about.tsumiki.app/">HOME</a></li>
+      <li><a href="https://tsumiki.app/">TSUMIKI.APP</a></li>
+      <li><a href="https://about.tsumiki.app/blog/">BLOG</a></li>
+    </ul>
+    
+    <div class="mobile-nav-divider"></div>
+    
+    <div class="mobile-env-title">SNS</div>
+    <ul class="list">
+          <li><a href="https://x.com/tsumiki_app">X (Twitter)</a></li>
+          <li><a href="https://discord.gg/Sv7gH7JujJ">Discord</a></li>
+          <li><a href="https://youtube.com/@tsumiki_app">Youtube</a></li>
+          <li><a href="https://note.com/@kokyujene">Note</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <section class="main-visual" aria-label="メインビジュアル">
+    <img src="sozai/images/main.png" alt="メインビジュアル">
+  </section>
+
+  <!-- ヒーロー/紹介セクション -->
+  <section class="section hero">
+    <div class="container">
+      <h1>ツミキ</h1>
+      <p class="subtitle">勉強とともにタイマーをスタートし、作業時間を記録しましょう。</p>
+      <div class="cta-buttons">
+        <a href="https://tsumiki.app/" class="btn btn-primary">アプリを使う</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- フィーチャーセクション -->
+  <section class="section features">
+    <div class="container">
+      <h2>特徴</h2>
+      <p class="subtitle"><b>勉強を想定とされた設計</b><br>最低限—でも機能と満足度は多く｡<br><br>- 淡い色での統一<br>- 集中しやすいUI<br>- 25m/5mのフォーカスモード<br>- 音楽機能<br>- Todo<br>- タイマーのグループ名<br>- ENGLISH!!!!!<br>- 見ただけですぐ比較できるグラフ<br>- データのエクスポート<br><br><b>自由なカスタマイズ性</b><br>- フォント全17種類以上<br>- テーマカラー7色+ダークモードで全14種<br>- 細かい機能のON/OFF<br>- 表示位置やフォーカスモードのカスタマイズ</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- フッター -->
+<footer class="site-footer">
+  <div class="container footer-container">
+    <div class="footer-brand">
+      <img src="https://tsumiki.app/1024,1024_icon.png" alt="ツミキ" class="footer-logo">
+      <div class="footer-brand-title">ツミキ</div>
+      <p class="footer-desc">勉強とともにタイマーをスタートし、<br>作業時間を記録しましょう。</p>
+    </div>
+
+    <div class="footer-links-group">
+      <div class="footer-col">
+        <h4>メニュー</h4>
+        <ul class="list">
+          <li><a href="https://about.tsumiki.app/">HOME</a></li>
+          <li><a href="https://tsumiki.app/">TSUMIKI.APP</a></li>
+          <li><a href="https://about.tsumiki.app/blog/">BLOG</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SNS</h4>
+        <ul class="list">
+          <li><a href="https://x.com/tsumiki_app">X (Twitter)</a></li>
+          <li><a href="https://discord.gg/Sv7gH7JujJ">Discord</a></li>
+          <li><a href="https://youtube.com/@tsumiki_app">Youtube</a></li>
+          <li><a href="https://note.com/@kokyujene">Note</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>© 2025-2026 ツミキ / Super Hiko14 / 高級ジェネ™ All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
