@@ -31,11 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const mobileFullscreen = document.getElementById('mobileFullscreen');
     const mobileIcon = mobileMenuToggle ? mobileMenuToggle.querySelector('.hamburger-icon') : null;
+
+    const updateMobileNavScrollState = () => {
+        if (!mobileFullscreen) {
+            return;
+        }
+        const isOpen = !mobileFullscreen.classList.contains('hidden');
+        document.body.classList.toggle('mobile-nav-open', isOpen);
+    };
     
     if (mobileMenuToggle) {
         mobileMenuToggle.addEventListener('click', () => {
             mobileMenuToggle.classList.toggle('active');
             mobileFullscreen.classList.toggle('hidden');
+            updateMobileNavScrollState();
             
             // アイコン画像を切り替え
             if (mobileMenuToggle.classList.contains('active')) {
@@ -51,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', () => {
                 mobileMenuToggle.classList.remove('active');
                 mobileFullscreen.classList.add('hidden');
+                updateMobileNavScrollState();
                 if (mobileIcon) mobileIcon.src = 'sozai/images/menu.webp';
             });
         });
@@ -60,9 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === mobileFullscreen) {
                 mobileMenuToggle.classList.remove('active');
                 mobileFullscreen.classList.add('hidden');
+                updateMobileNavScrollState();
                 if (mobileIcon) mobileIcon.src = 'sozai/images/menu.webp';
             }
         });
+
+        updateMobileNavScrollState();
     }
 
     const mainVisual = document.querySelector('.main-visual');
@@ -100,4 +113,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('resize', updateMainVisualAutoPan);
     window.addEventListener('orientationchange', updateMainVisualAutoPan);
+
+    window.addEventListener('resize', () => {
+        if (!window.matchMedia('(max-width: 768px)').matches) {
+            document.body.classList.remove('mobile-nav-open');
+        }
+    });
+
+    // ダークモード切り替え機能
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const moonIcon = 'https://kokyujene.super-hiko14.com/images/moon.webp';
+    const sunIcon = 'https://kokyujene.super-hiko14.com/images/sun.webp';
+
+    const updateThemeIcon = (isDark) => {
+        if (themeIcon) {
+            themeIcon.src = isDark ? sunIcon : moonIcon;
+        }
+    };
+
+    // 初期状態の反映（OS設定や保存された設定があればここで処理）
+    // 今回はシンプルに現在のbodyのクラスで判定
+    updateThemeIcon(document.body.classList.contains('dark'));
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            updateThemeIcon(isDark);
+            
+            // ローカルストレージに保存する場合
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    }
+
+    // ページ読み込み時に保存されたテーマを適用
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        updateThemeIcon(true);
+    } else if (savedTheme === 'light') {
+        document.body.classList.remove('dark');
+        updateThemeIcon(false);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // 保存がない場合はOS設定に従う
+        document.body.classList.add('dark');
+        updateThemeIcon(true);
+    }
 });
