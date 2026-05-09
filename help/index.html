@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help — ツミキapp</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body class="light">
+
+<div class="top-buttons">
+  <button class="icon-btn" id="themeToggle" aria-label="テーマ切り替え">
+    <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="sunIcon" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</div>
+
+<div class="wrapper">
+  <div class="page-header">
+    <a class="logo-link" href="https://about.tsumiki.app/">
+      <img id="siteLogo" src="https://tsumiki.app/tsumiki_logo.svg" alt="ツミキapp">
+    </a>
+    <h1>Help</h1>
+    <p>よくある質問をまとめています。<br>キーワードやカテゴリで絞り込めます。</p>
+  </div>
+
+  <nav class="nav-pills">
+    <a href="https://about.tsumiki.app/" class="nav-pill">HOME</a>
+    <a href="https://about.tsumiki.app/blog/" class="nav-pill">BLOG</a>
+    <a href="https://about.tsumiki.app/changelog/" class="nav-pill">CHANGELOG</a>
+    <span class="nav-pill active">HELP</span>
+    <a href="https://tsumiki.app/" class="nav-pill">TSUMIKI.APP</a>
+  </nav>
+
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" id="searchBox" type="text"
+      placeholder="キーワードで絞り込む…" autocomplete="off">
+  </div>
+
+  <div class="cat-tabs" id="catTabs"></div>
+  <div class="qa-list" id="qaList"></div>
+
+  <hr>
+  <footer>© 2025-2026 ツミキapp / Super Hiko14 / 高級ジェネ™ All Rights Reserved.</footer>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

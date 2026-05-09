@@ -3,6 +3,7 @@ const THEME_KEY = 'tsumiki_theme';
 let blogPosts = [];
 let blogCurrentTag = 'all';
 let blogLoadError = '';
+let helpCurrentCat = 'すべて';
 
 function applyTheme(isDark) {
   document.body.classList.toggle('dark', isDark);
@@ -298,4 +299,120 @@ document.addEventListener('DOMContentLoaded', () => {
   bindChangelogEvents();
   initBlog();
   renderChangelog();
+  initHelp();
+});
+
+const HELP_QA = [
+  {cat:'タイマー', q:'大前提、どうやって使うの?', a:'まず最初にアクセスしたときに大きい00:00:00と色々なnavや入力欄、フォーカスモードのON/OFF、一時停止、テーマカラー色のタイマースタートボタンが目立つでしょう。タイマースタートボタンを押しスタートすると中央で目立っている00:00:00がストップウォッチとして動き始めます。タイマースタートボタンの上にある一時停止ボタンから一時停止したり、テキスト入力欄でグループ名を記入して後の教科のメモにしたりできます。フォーカスモードをONにすると、集中時間と休憩時間を自動で切り替えることができます。テーマカラーは設定から変えられます。'},
+  {cat:'タイマー', q:'大前提、どうやって使うの? Part2', a:'統計ボタンを開くと総勉強時間、連続日数、総セッション数、グループごとの総勉強時間などが見れます。名前の通りですね!!!!!!リストを開くと今までの記録がずらっと見れます。グループ名で絞り込んだり、記録を削除したりもできます。グループ名ミスったぁ...バナナにしちまったぁ☆....ってときもご安心ください。記録カードを選択して移動からグループを移動させることができます(記録時間の変更有無にグループを変更できますね)。ほかにもリストでは絞り込み以外にも並び替えなどまあまああります。'},
+  {cat:'タイマー', q:'タイマーを閉じてしまっても大丈夫?', a:'大丈夫です。開始時刻をブラウザに保存しているため、再度開くと経過時間が自動で復元されます。'},
+  {cat:'タイマー', q:'フォーカスモードって何?', a:'ポモドーロテクニックをベースにした機能です。集中時間が終わると自動で休憩に切り替わり、<span class="text-link tuuti">通知音</span>でお知らせします。設定画面で時間を変更できます。'},
+  {cat:'タイマー', q:'グループ名を入れるとどうなる?', a:'統計画面やリスト画面でグループ別に記録を絞り込んだり集計できます。入力しなくても記録は保存されます。'},
+  {cat:'データ', q:'データはどこに保存される?', a:'ブラウザのローカルストレージに保存されます。サーバーへの送信は一切ありません。ブラウザのデータ消去で消えるため、定期的なエクスポートをおすすめします。'},
+  {cat:'データ', q:'別のデバイスにデータを移したい', a:'設定の「エクスポート」でJSONファイルを保存し、移行先で「インポート」を選んで読み込むとデータを引き継げます。'},
+  {cat:'データ', q:'誤って履歴を削除してしまった', a:'削除した履歴を元に戻す機能はありません。定期的にエクスポートしてバックアップを取っておくことをおすすめします。'},
+  {cat:'データ', q:'あとからグループ名を変更したい', a:'設定の下らへんにグループの管理があります。グループ名を一括で変えたり、削除したりできます。グループを削除しても記録自体は消えず、グループなしの状態になります。'},
+  {cat:'音楽', q:'音楽ってなに?', a:'その名の通り音楽を再生できるの...ですが。ローカルに保存されたファイルしか流せません。ゆーちゅーぶのこれをこのツールで聞きたいなあ...なんてできません。フリー素材のものぶち込むかサウンドトラック買ってください。'},
+  {cat:'音楽', q:'<a href="https://youtube.com" class="text-link">YouTube</a>の音楽は追加できる?', a:'各サービスの利用規約への対応のため、追加する予定はありません。ローカルに保存された音楽ファイルのみ追加できます。'},
+  {cat:'音楽', q:'音楽が再生できない/途中で止まる', a:'対応フォーマットはmp3 / wav / flac / m4a / aac / ogg / webm です。設定の「更新後にタップで音楽を自動再開」をONにすると復帰しやすくなります。私の経験ではどこかの誰かさんがCDからPCに取り込んだものをmp4にしている人を見たことがあります^^ 誰でしょうね?'},
+  {cat:'音楽', q:'更新したら曲がなくなった', a:'IndexedDBに自動保存されますが、ブラウザのデータ消去やプライベートモードでは消えます。一部のブラウザ設定によっても保存できない場合があります。'},
+  {cat:'ToDo', q:'ToDoってなに?', a:'簡単に言うとやることリストです。チェックマークを付けて完了したなどを手軽にできるリストですね。勉強のタスク管理に使ったり、今日やることを書いておいたり、何かのリストを作るのに使えます。'},
+  {cat:'ToDo', q:'ToDoはリロードしても消えない?', a:'ローカルストレージに保存されるため、リロード後も残ります。ただしブラウザのデータ消去で消えます。'},
+  {cat:'ToDo', q:'ToDo Ver.2とは?', a:'設定からON/OFF設定できる拡張機能です(標準ではONです)。段階的完了/期間設定/カレンダービューなどが追加されます。邪魔なら消せます。'},
+  {cat:'ToDo', q:'毎日リセットされるタスクを作りたい', a:'タスク追加時に「繰り返し」を「毎日」に設定すると、翌日の0時以降に自動で未完了に戻ります。週/月単位も選べます。'},
+  {cat:'カスタマイズ', q:'テーマカラーを変えたい', a:'設定画面の「テーマカラー」から7色を選べます。ダークモードと組み合わせると最大14パターン。'},
+  {cat:'カスタマイズ', q:'フォントを変えたい', a:'設定の「フォント設定」から日本語用/英数字用を個別に設定できます。17種類以上から選択可能です。'},
+  {cat:'カスタマイズ', q:'音楽やToDoを非表示にしたい', a:'設定の「表示設定」から音楽プレイヤーとToDoリストをそれぞれON/OFFできます。OFFにするとメニューから消えます。'},
+  {cat:'カスタマイズ', q:'設定項目でいろいろ非表示に出来るけど...なんで?', a:'やっぱりカスタマイズ性が豊富ってかなり大事だと思います。そこから邪魔なものは非表示、でもこれは欲しいから表示...みたいなのをやっていくわくわくかんだってありますし。自分の至高の環境でする勉強以上に楽しいものはないです!!!!'},
+  {cat:'その他', q:'何でツミキapp?', a:'勉強を積んでいく...「ツミキ」、じゃないですか...? まあ響きが好きだったのもありますね。ハッシュタグは「#積むツミキ」です。あと普通に「ツミキ」ではなく「ツミキapp」にしたかといいますと商標権が怖いというのと.appドメイン折角とってやったんだし使ってやろうという魂胆です。'},
+  {cat:'その他', q:'変更履歴が見たい', a:'変更履歴なら<a href="https://about.tsumiki.app/changelog" class="text-link">このサイトのCHANGELOG</a>にほぼ記載しています。'},
+  {cat:'その他', q:'広告導入の予定は?', a:'広告とかは絶対にないです。このツールの所持者が私である限りないです。ですが寄付サイトだけ立ち上げてそこらへんに目立たない位置にポツンと寄付してほしいみたいなことは書くかもですね...。'},
+  {cat:'その他', q:'誰が作ったの?', a:'この僕、「Super Hiko14」が作りました。誇りに思ってます...!'},
+  {cat:'その他', q:'何で作ったの?', a:'何で作ったんでしょうね? 友達に頼まれたから? 自分のため? ですが僕やみんなの役に立っているので結果オーライです!!!!!!'},
+  {cat:'その他', q:'何で勉強時間管理サイトであるツミキappなのにゲーム特化discordや多様なSNS、YoutubeやXなどもやっているの?', a:'...。......。<br>...勉強には...息抜きは...必須です...。'},
+  {cat:'その他', q:'何で最初青い画面が出てくるの?', a:'読み込みです。サイトアクセス時に一瞬初期値の青色が表示されたのち、いろいろ読み込まれテーマカラーが適用されローディングアニメーションが流れます。'},
+  {cat:'その他', q:'お問い合わせはどこに?', a:'<a href="mailto:info@tsumiki.app" class="text-link">info@tsumiki.app</a>です。分からない細かい点や、バグなどを発見した場合はここにぜひ気軽にご連絡ください。'},
+  {cat:'その他', q:'にゃにゃにゃあにゃにゃにゃあ?あにゃにゃにゃにゃにゃあああ????<br>(追加予定はある?あとなんで最後毎回猫なの????)', a:'にゃああああああああああ!にゃああああああああああああああああ!!!!!<br>(あるううううううう!猫好きだからだよおおおおおおおおおおおお!!!!!'},
+];
+
+function helpHighlight(text, q) {
+  if (!q) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function renderHelp() {
+  const searchBox = document.getElementById('searchBox');
+  const list = document.getElementById('qaList');
+  if (!searchBox || !list) return;
+  const q = searchBox.value.trim().toLowerCase();
+  const filtered = HELP_QA.filter(item => {
+    const catOk = helpCurrentCat === 'すべて' || item.cat === helpCurrentCat;
+    const qOk = !q || item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q);
+    return catOk && qOk;
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty">該当する質問が見つかりませんでした。<br>別のキーワードで試してみてください。</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(item => `
+    <div class="qa-card">
+      <span class="qa-cat">${item.cat}</span>
+      <div class="qa-q">${helpHighlight(item.q, q)}</div>
+      <hr class="qa-divider">
+      <div class="qa-a">${helpHighlight(item.a, q)}</div>
+    </div>
+  `).join('');
+}
+
+function buildHelpTabs() {
+  const tabs = document.getElementById('catTabs');
+  if (!tabs) return;
+  const cats = ['すべて', ...new Set(HELP_QA.map(q => q.cat))];
+  tabs.innerHTML = cats.map(c =>
+    `<button class="cat-tab${c==='すべて'?' active':''}" data-cat="${c}">${c}</button>`
+  ).join('');
+}
+
+function bindHelpEvents() {
+  const tabs = document.getElementById('catTabs');
+  if (tabs) {
+    tabs.addEventListener('click', (e) => {
+      const btn = e.target.closest('.cat-tab');
+      if (!btn) return;
+      helpCurrentCat = btn.getAttribute('data-cat');
+      tabs.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHelp();
+    });
+  }
+
+  const searchBox = document.getElementById('searchBox');
+  if (searchBox) {
+    searchBox.addEventListener('input', renderHelp);
+  }
+}
+
+function initHelp() {
+  const list = document.getElementById('qaList');
+  if (!list) return;
+  buildHelpTabs();
+  bindHelpEvents();
+  renderHelp();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const elements = document.querySelectorAll('.tuuti');
+  const audio = new Audio('tuuti.wav');
+
+  elements.forEach(element => {
+    element.addEventListener('click', () => {
+      audio.currentTime = 0; 
+      audio.play().catch(error => {
+        console.error("音声の再生に失敗しました:", error);
+      });
+    });
+  });
 });
