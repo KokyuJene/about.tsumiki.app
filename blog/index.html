@@ -14,117 +14,12 @@
 <link rel="icon" type="image/png" sizes="48x48" href="https://tsumiki.app/favicon-v2-48x.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="https://tsumiki.app/apple-touch-icon-v2.png?v=2">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --primary-color: #9db4c8;
-  --primary-hover: #8ba4b8;
-  --primary-color-dark: #7a95ab;
-  --bg-light: #f8f9fb;
-  --bg-dark: #17181d;
-  --panel-light: #f0f2f7;
-  --panel-light-hover: #e6e8ed;
-  --panel-light-border: #dfe1e6;
-  --panel-dark: #252a38;
-  --panel-dark-2: #3d4454;
-}
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Jost','Zen Kaku Gothic Antique',system-ui,sans-serif; font-weight:400; }
-body { background:var(--bg-light); color:#323232; transition:background .3s,color .3s; }
-body.dark { background:var(--bg-dark); color:#e8e8e8; }
-a { color:inherit; text-decoration:none; }
-
-/* TOP BUTTONS */
-.top-buttons { position:fixed; top:20px; right:20px; display:flex; gap:10px; z-index:1000; }
-.icon-btn {
-  width:50px; height:50px; border-radius:24px;
-  display:flex; align-items:center; justify-content:center;
-  border:none; cursor:pointer; transition:all .2s; padding:10px;
-  background:var(--panel-light);
-}
-body.dark .icon-btn { background:var(--panel-dark); }
-.icon-btn svg { width:22px; height:22px; stroke:#323232; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-body.dark .icon-btn svg { stroke:#e8e8e8; }
-
-/* WRAPPER */
-.wrapper { max-width:760px; margin:0 auto; padding:80px 20px 60px; }
-
-/* PAGE HEADER */
-.page-header { text-align:center; margin-bottom:56px; }
-.page-header .logo-link img { width:clamp(120px,28vw,160px); height:auto; margin-bottom:28px; }
-.page-header h1 { font-size:1.8rem; letter-spacing:1px; margin-bottom:10px; }
-.page-header p { font-size:.92rem; opacity:.6; line-height:1.8; }
-
-/* NAV PILLS */
-.nav-pills { display:flex; gap:8px; justify-content:center; margin-bottom:48px; flex-wrap:wrap; }
-.nav-pill {
-  padding:9px 22px; border-radius:24px; font-size:.88rem; border:none;
-  cursor:pointer; font-family:inherit; transition:all .2s;
-  background:var(--panel-light); color:#323232;
-  text-decoration:none; display:inline-block;
-}
-body.dark .nav-pill { background:var(--panel-dark); color:#e8e8e8; }
-.nav-pill:hover, .nav-pill.active {
-  background:var(--primary-color); color:#fff;
-}
-body.dark .nav-pill:hover, body.dark .nav-pill.active {
-  background:var(--primary-color-dark);
-}
-
-/* BLOG TIMELINE */
-.blog-grid { display:flex; flex-direction:column; gap:12px; }
-
-.blog-entry {
-  border-radius:24px; background:var(--panel-light);
-  overflow:hidden; transition:all .2s;
-}
-body.dark .blog-entry { background:var(--panel-dark); }
-
-.blog-header {
-  display:flex; align-items:flex-start; gap:16px;
-  padding:22px 26px; cursor:pointer; user-select:none;
-}
-.blog-header:hover { background:var(--panel-light-hover); }
-body.dark .blog-header:hover { background:var(--panel-dark-2); }
-
-.blog-head-main { flex:1; min-width:0; }
-.blog-title { font-size:1.08rem; line-height:1.55; margin-top:6px; }
-.blog-excerpt { font-size:.9rem; opacity:.7; line-height:1.75; margin-top:10px; }
-.blog-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.blog-date { font-size:.8rem; opacity:.55; font-variant-numeric:tabular-nums; white-space:nowrap; }
-.blog-tag {
-  display:inline-block; padding:3px 11px; border-radius:24px;
-  font-size:.75rem; background:rgba(157,180,200,.22); color:var(--primary-color);
-}
-body.dark .blog-tag { background:rgba(122,149,171,.25); color:var(--primary-color-dark); }
-
-.blog-chevron {
-  width:18px; height:18px; stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  opacity:.45; transition:transform .25s; flex-shrink:0;
-}
-.blog-entry.open .blog-chevron { transform:rotate(180deg); }
-
-.blog-body { display:none; padding:0 26px 24px; border-top:1px solid var(--panel-light-border); }
-body.dark .blog-body { border-color:var(--panel-dark-2); }
-.blog-entry.open .blog-body { display:block; }
-
-.blog-content { margin-top:16px; }
-.blog-content p { font-size:.92rem; opacity:.78; line-height:1.9; margin-bottom:14px; }
-
-/* EMPTY STATE */
-.empty-state { text-align:center; padding:60px 0; opacity:.45; font-size:.95rem; line-height:2; }
-
-/* DIVIDER */
-hr { border:none; border-top:1px solid var(--panel-light-border); margin:56px 0; }
-body.dark hr { border-color:var(--panel-dark-2); }
-
-/* FOOTER */
-footer { text-align:center; font-size:.8rem; opacity:.4; padding-bottom:32px; }
-</style>
+<link rel="stylesheet" href="../style.css">
 </head>
 <body class="light">
 
 <div class="top-buttons">
-  <button class="icon-btn" onclick="toggleTheme()" aria-label="テーマ切り替え">
+  <button class="icon-btn" id="themeToggle" aria-label="テーマ切り替え">
     <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     <svg id="sunIcon"  viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
   </button>
@@ -151,10 +46,10 @@ footer { text-align:center; font-size:.8rem; opacity:.4; padding-bottom:32px; }
 
   <!-- FILTER (tag buttons) -->
   <div class="nav-pills" style="margin-bottom:32px;" id="tagFilter">
-    <button class="nav-pill active" onclick="filterTag('all',this)">すべて</button>
-    <button class="nav-pill" onclick="filterTag('update',this)">アップデート</button>
-    <button class="nav-pill" onclick="filterTag('tips',this)">使い方</button>
-    <button class="nav-pill" onclick="filterTag('dev',this)">開発日誌</button>
+    <button class="nav-pill active" data-tag="all">すべて</button>
+    <button class="nav-pill" data-tag="update">アップデート</button>
+    <button class="nav-pill" data-tag="tips">使い方</button>
+    <button class="nav-pill" data-tag="dev">開発日誌</button>
   </div>
 
   <!-- BLOG CARDS -->
@@ -164,87 +59,6 @@ footer { text-align:center; font-size:.8rem; opacity:.4; padding-bottom:32px; }
   <footer>© 2025-2026 ツミキapp / Super Hiko14 / 高級ジェネ™ All Rights Reserved.</footer>
 </div>
 
-<script>
-let POSTS = [];
-let currentTag = 'all';
-let postsLoadError = '';
-
-function renderPosts(tag) {
-  const grid = document.getElementById('blogGrid');
-  if (postsLoadError) {
-    grid.innerHTML = `<div class="empty-state">${postsLoadError}</div>`;
-    return;
-  }
-  const filtered = tag === 'all' ? POSTS : POSTS.filter(p => p.tag === tag);
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div class="empty-state">記事がまだありません。<br>近日公開予定です。</div>';
-    return;
-  }
-  grid.innerHTML = filtered.map((p, i) => {
-    const bodyHtml = p.contentHtml
-      ? p.contentHtml
-      : (p.content || []).map(line => `<p>${line}</p>`).join('');
-    return `
-      <div class="blog-entry${p.open ? ' open' : ''}" id="post-${i}">
-        <div class="blog-header" onclick="togglePost(${i})">
-          <div class="blog-head-main">
-            <div class="blog-meta">
-              <span class="blog-tag">${p.tagLabel || ''}</span>
-            </div>
-            <div class="blog-title">${p.title}</div>
-            <div class="blog-excerpt">${p.excerpt || ''}</div>
-          </div>
-          <span class="blog-date">${p.date}</span>
-          <svg class="blog-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="blog-body">
-          <div class="blog-content">${bodyHtml}</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function togglePost(i) {
-  const entry = document.getElementById(`post-${i}`);
-  if (entry) entry.classList.toggle('open');
-}
-
-function filterTag(tag, btn) {
-  currentTag = tag;
-  document.querySelectorAll('#tagFilter .nav-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderPosts(tag);
-}
-
-function toggleTheme() {
-  const dark = document.body.classList.toggle('dark');
-  document.body.classList.toggle('light', !dark);
-  document.getElementById('moonIcon').style.display = dark ? 'none' : '';
-  document.getElementById('sunIcon').style.display  = dark ? '' : 'none';
-  document.getElementById('siteLogo').src = dark
-    ? 'https://tsumiki.app/tsumiki_logo_akarui.svg'
-    : 'https://tsumiki.app/tsumiki_logo.svg';
-}
-
-async function initBlog() {
-  const grid = document.getElementById('blogGrid');
-  grid.innerHTML = '<div class="empty-state">読み込み中...</div>';
-  try {
-    const postsUrl = new URL('posts.json', location.href).toString();
-    const res = await fetch(postsUrl, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    POSTS = Array.isArray(data) ? data : (data.posts || []);
-    postsLoadError = '';
-  } catch (err) {
-    POSTS = [];
-    postsLoadError = 'posts.json の読み込みに失敗しました。URLを確認してください。';
-  }
-  renderPosts(currentTag);
-}
-
-initBlog();
-</script>
+<script src="../script.js"></script>
 </body>
 </html>

@@ -14,158 +14,13 @@
 <link rel="icon" type="image/png" sizes="48x48" href="https://tsumiki.app/favicon-v2-48x.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="https://tsumiki.app/apple-touch-icon-v2.png?v=2">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --primary-color: #9db4c8;
-  --primary-hover: #8ba4b8;
-  --primary-color-dark: #7a95ab;
-  --bg-light: #f8f9fb;
-  --bg-dark: #17181d;
-  --panel-light: #f0f2f7;
-  --panel-light-hover: #e6e8ed;
-  --panel-light-border: #dfe1e6;
-  --panel-dark: #252a38;
-  --panel-dark-2: #3d4454;
-  --font-ja: 'Zen Kaku Gothic Antique';
-  --font-en: 'Jost';
-}
-
-* { margin:0; padding:0; box-sizing:border-box; font-family: var(--font-en), var(--font-ja), system-ui, sans-serif; font-weight:400; }
-
-body { background:var(--bg-light); color:#323232; transition:background .3s,color .3s; }
-body.dark { background:var(--bg-dark); color:#e8e8e8; }
-
-a { color:inherit; text-decoration:none; }
-
-/* ── TOP BUTTONS ── */
-.top-buttons {
-  position:fixed; top:20px; right:20px;
-  display:flex; gap:10px; z-index:1000;
-}
-.icon-btn {
-  width:50px; height:50px; border-radius:24px;
-  display:flex; align-items:center; justify-content:center;
-  border:none; cursor:pointer; transition:all .3s; padding:10px;
-  background:var(--panel-light);
-}
-body.dark .icon-btn { background:var(--panel-dark); }
-.icon-btn svg { width:22px; height:22px; stroke:#323232; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-body.dark .icon-btn svg { stroke:#e8e8e8; }
-
-/* ── HERO ── */
-.hero {
-  min-height:100vh; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center; padding:40px 20px 60px;
-}
-.hero-logo { width:clamp(180px,42vw,260px); height:auto; margin-bottom:28px; }
-.hero-sub {
-  font-size:clamp(.9rem,2.4vw,1.1rem); opacity:.7; line-height:1.8;
-  max-width:480px; margin-bottom:40px;
-}
-.hero-btn {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:14px 36px; border-radius:24px; border:none; cursor:pointer;
-  font-size:1rem; font-family:inherit; font-weight:400;
-  background:var(--primary-color); color:#fff; transition:all .2s;
-  text-decoration:none;
-}
-.hero-btn:hover { background:var(--primary-hover); transform:scale(1.02); }
-body.dark .hero-btn { background:var(--primary-color-dark); }
-
-/* NAV PILLS */
-.nav-pill {
-  padding:9px 22px; border-radius:24px; font-size:.88rem; border:none;
-  cursor:pointer; font-family:inherit; transition:all .2s;
-  background:var(--panel-light); color:#323232;
-  text-decoration:none; display:inline-block;
-}
-body.dark .nav-pill { background:var(--panel-dark); color:#e8e8e8; }
-.nav-pill:hover, .nav-pill.active { background:var(--primary-color); color:#fff; }
-body.dark .nav-pill:hover, body.dark .nav-pill.active { background:var(--primary-color-dark); }
-
-/* ── SECTION ── */
-.section { padding:80px 20px; max-width:760px; margin:0 auto; }
-.section-title {
-  font-size:1.4rem; text-align:center; margin-bottom:40px; letter-spacing:.5px;
-}
-
-/* ── FEATURE CARDS ── */
-.cards { display:flex; flex-direction:column; gap:16px; }
-.card {
-  padding:28px 32px; border-radius:24px;
-  background:var(--panel-light); transition:all .2s;
-}
-body.dark .card { background:var(--panel-dark); }
-.card-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
-.card-icon {
-  width:44px; height:44px; border-radius:14px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(157,180,200,.18);
-}
-body.dark .card-icon { background:rgba(122,149,171,.22); }
-.card-icon svg { width:22px; height:22px; stroke:var(--primary-color); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-body.dark .card-icon svg { stroke:var(--primary-color-dark); }
-.card h3 { font-size:1.05rem; font-weight:400; }
-.card ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
-.card ul li {
-  font-size:.9rem; opacity:.75; padding-left:18px; position:relative; line-height:1.6;
-}
-.card ul li::before {
-  content:''; position:absolute; left:0; top:9px;
-  width:6px; height:6px; border-radius:50%;
-  background:var(--primary-color);
-}
-body.dark .card ul li::before { background:var(--primary-color-dark); }
-
-/* ── STATS ROW ── */
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:60px; }
-.stat-card { padding:24px 16px; border-radius:24px; text-align:center; background:var(--panel-light); }
-body.dark .stat-card { background:var(--panel-dark); }
-.stat-val { font-size:1.8rem; color:var(--primary-color); margin-bottom:6px; }
-body.dark .stat-val { color:var(--primary-color-dark); }
-.stat-lbl { font-size:.82rem; opacity:.65; }
-
-/* ── LINKS ── */
-.links { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:48px; }
-.pill-link {
-  display:inline-flex; align-items:center; gap:7px;
-  padding:10px 22px; border-radius:999px; font-size:.9rem;
-  border:1px solid var(--panel-light-border);
-  background:transparent; cursor:pointer; transition:all .2s;
-  font-family:inherit; color:inherit;
-  text-decoration:none;
-}
-body.dark .pill-link { border-color:var(--panel-dark-2); }
-.pill-link:hover { background:var(--primary-color); color:#fff; border-color:var(--primary-color); }
-body.dark .pill-link:hover { background:var(--primary-color-dark); border-color:var(--primary-color-dark); }
-.pill-link svg { width:15px; height:15px; flex-shrink:0; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-
-/* ── DIVIDER ── */
-.divider { border:none; border-top:1px solid var(--panel-light-border); margin:0 auto; max-width:760px; }
-body.dark .divider { border-color:var(--panel-dark-2); }
-
-/* ── FOOTER ── */
-footer {
-  text-align:center; padding:40px 20px 32px;
-  font-size:.82rem; opacity:.45;
-  border-top:1px solid var(--panel-light-border);
-}
-body.dark footer { border-color:var(--panel-dark-2); }
-
-/* ── MOBILE ── */
-@media(max-width:600px){
-  .stats { grid-template-columns:1fr 1fr; }
-  .stat-card:last-child { grid-column:span 2; }
-  .card { padding:22px 20px; }
-}
-</style>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body class="light">
 
 <!-- テーマ切り替え -->
 <div class="top-buttons">
-  <button class="icon-btn" onclick="toggleTheme()" aria-label="テーマ切り替え" id="themeBtn">
+  <button class="icon-btn" id="themeToggle" aria-label="テーマ切り替え">
     <!-- moon -->
     <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     <!-- sun (hidden) -->
@@ -277,11 +132,11 @@ body.dark footer { border-color:var(--panel-dark-2); }
       アプリを使う
     </a>
     <a href="https://x.com/tsumiki_app" class="pill-link" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M4 4l16 16M4 20L20 4" stroke-width="2"/></svg>
+      <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 0.3px;"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
       X (Twitter)
     </a>
     <a href="https://discord.gg/Sv7gH7JujJ" class="pill-link" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.027.015.052.03.07a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.04.001-.088-.041-.104a13.12 13.12 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+      <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Discord</title><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
       Discord
     </a>
     <a href="https://note.com/kokyujene" class="pill-link" target="_blank" rel="noopener">
@@ -297,17 +152,6 @@ body.dark footer { border-color:var(--panel-dark-2); }
   © 2025-2026 ツミキapp / Super Hiko14 / 高級ジェネ™ All Rights Reserved.
 </footer>
 
-<script>
-function toggleTheme() {
-  const body = document.body;
-  const isDark = body.classList.toggle('dark');
-  body.classList.toggle('light', !isDark);
-  document.getElementById('moonIcon').style.display = isDark ? 'none' : '';
-  document.getElementById('sunIcon').style.display  = isDark ? '' : 'none';
-  document.getElementById('heroLogo').src = isDark
-    ? 'https://tsumiki.app/tsumiki_logo_akarui.svg'
-    : 'https://tsumiki.app/tsumiki_logo.svg';
-}
-</script>
+<script src="./script.js"></script>
 </body>
 </html>
