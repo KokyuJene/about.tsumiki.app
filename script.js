@@ -133,6 +133,14 @@ function bindBlogEvents() {
 
 const CHANGELOG_VERSIONS = [
   {
+    version: 'v1.14.1', date: '2026.05.10', type: 'minor', open: true,
+    summary: 'ロゴの追加。',
+    items: [
+      { tag:'add',    text:'ホームページ追加に伴う更新' },
+      { tag:'fix',    text:'著作権表記のミスを修正' },
+    ],
+  },
+  {
     version: 'v1.14.0', date: '2026.05.08', type: 'minor', open: true,
     summary: 'ロゴの追加。',
     items: [
