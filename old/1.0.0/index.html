@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勉強時間管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.light {
+            background-color: #f5f5f0;
+            color: #3a3a3a;
+        }
+
+        body.dark {
+            background-color: #2a2d3a;
+            color: #e8e8e8;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .menu button {
+            padding: 10px 25px;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .light .menu button {
+            background-color: #e0e0da;
+            color: #3a3a3a;
+        }
+
+        .light .menu button.active {
+            background-color: #6b7b8c;
+            color: white;
+        }
+
+        .dark .menu button {
+            background-color: #3a3d4a;
+            color: #e8e8e8;
+        }
+
+        .dark .menu button.active {
+            background-color: #5a6b7c;
+            color: white;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .timer {
+            font-size: 4rem;
+            font-weight: 300;
+            margin: 40px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .session-info {
+            font-size: 0.95rem;
+            margin: 30px 0;
+            opacity: 0.7;
+            line-height: 1.8;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .light button.primary {
+            background-color: #6b7b8c;
+            color: white;
+        }
+
+        .light button.primary:hover {
+            background-color: #5a6a7b;
+        }
+
+        .dark button.primary {
+            background-color: #5a6b7c;
+            color: white;
+        }
+
+        .dark button.primary:hover {
+            background-color: #4a5b6c;
+        }
+
+        .light button.secondary {
+            background-color: #d4d4ce;
+            color: #3a3a3a;
+        }
+
+        .light button.secondary:hover {
+            background-color: #c4c4be;
+        }
+
+        .dark button.secondary {
+            background-color: #3a3d4a;
+            color: #e8e8e8;
+        }
+
+        .dark button.secondary:hover {
+            background-color: #4a4d5a;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px;
+        }
+
+        .light .theme-toggle {
+            background-color: #e0e0da;
+        }
+
+        .dark .theme-toggle {
+            background-color: #3a3d4a;
+        }
+
+        .theme-toggle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            .timer {
+                font-size: 3rem;
+                margin: 30px 0;
+            }
+
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .menu button {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
+
+            .history-item {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timer {
+                font-size: 2.5rem;
+            }
+
+            .session-info {
+                font-size: 0.9rem;
+            }
+
+            .history-item-date {
+                font-size: 1rem;
+            }
+
+            .history-item-time {
+                font-size: 0.85rem;
+            }
+
+            .history-item-duration {
+                font-size: 1.1rem;
+            }
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .history-list {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .light .history-item {
+            background-color: #e8e8e2;
+        }
+
+        .dark .history-item {
+            background-color: #3a3d4a;
+        }
+
+        .history-item-date {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .history-item-time {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .history-item-duration {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .light .history-item-duration {
+            color: #6b7b8c;
+        }
+
+        .dark .history-item-duration {
+            color: #7a8b9c;
+        }
+
+        .empty-state {
+            margin-top: 60px;
+            opacity: 0.5;
+            font-size: 1rem;
+        }
+
+        .clear-history {
+            margin-top: 30px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .light .search-box input {
+            background-color: #e8e8e2;
+            color: #3a3a3a;
+        }
+
+        .dark .search-box input {
+            background-color: #3a3d4a;
+            color: #e8e8e8;
+        }
+
+        .light .search-box input::placeholder {
+            color: #8a8a8a;
+        }
+
+        .dark .search-box input::placeholder {
+            color: #a8a8a8;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .light .search-box input:focus {
+            background-color: #deded8;
+        }
+
+        .dark .search-box input:focus {
+            background-color: #4a4d5a;
+        }
+    </style>
+</head>
+<body class="light">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え">
+        <img id="themeIcon" src="moon.webp" alt="テーマ切り替え">
+    </button>
+    
+    <div class="container">
+        <h1>勉強時間管理</h1>
+        
+        <div class="menu">
+            <button class="active" onclick="showPage('timer')">タイマー</button>
+            <button onclick="showPage('list')">リスト</button>
+        </div>
+
+        <!-- タイマーページ -->
+        <div id="timerPage" class="page active">
+            <div class="timer" id="timer">00:00:00</div>
+            
+            <div class="session-info" id="sessionInfo">
+                開始ボタンを押して学習を始めましょう
+            </div>
+            
+            <div class="controls">
+                <button id="startBtn" class="primary" onclick="startStudy()">勉強開始</button>
+                <button id="pauseBtn" class="secondary hidden" onclick="pauseStudy()">一時停止</button>
+                <button id="endBtn" class="secondary hidden" onclick="endStudy()">終了</button>
+            </div>
+        </div>
+
+        <!-- リストページ -->
+        <div id="listPage" class="page">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="日付や時刻で検索（例: 2024-11-30, 14:30）" oninput="loadHistory()">
+            </div>
+            <div id="historyList" class="history-list"></div>
+            <button class="secondary clear-history" onclick="clearHistory()">履歴をクリア</button>
+        </div>
+    </div>
+
+    <script>
+        let startTime = null;
+        let pausedTime = 0;
+        let timerInterval = null;
+        let isPaused = false;
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days = 365) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                themeIcon.src = 'sun.webp';
+                themeIcon.alt = 'ライトモードに切り替え';
+                setCookie('theme', 'dark');
+            } else {
+                body.classList.remove('dark');
+                body.classList.add('light');
+                themeIcon.src = 'moon.webp';
+                themeIcon.alt = 'ダークモードに切り替え';
+                setCookie('theme', 'light');
+            }
+        }
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.menu button').forEach(btn => btn.classList.remove('active'));
+            
+            if (pageName === 'timer') {
+                document.getElementById('timerPage').classList.add('active');
+                document.querySelector('.menu button:nth-child(1)').classList.add('active');
+            } else if (pageName === 'list') {
+                document.getElementById('listPage').classList.add('active');
+                document.querySelector('.menu button:nth-child(2)').classList.add('active');
+                loadHistory();
+            }
+        }
+
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function formatDateTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}年${month}月${day}日`;
+        }
+
+        function updateTimer() {
+            if (!isPaused && startTime) {
+                const elapsed = Date.now() - startTime + pausedTime;
+                document.getElementById('timer').textContent = formatTime(elapsed);
+            }
+        }
+
+        function startStudy() {
+            startTime = Date.now();
+            pausedTime = 0;
+            isPaused = false;
+            
+            const startTimeStr = new Date().toISOString();
+            setCookie('studyStartTime', startTimeStr);
+            
+            document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('pauseBtn').classList.remove('hidden');
+            document.getElementById('endBtn').classList.remove('hidden');
+            
+            document.getElementById('sessionInfo').textContent = 
+                `開始時刻: ${formatDateTime(new Date())}`;
+            
+            timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function pauseStudy() {
+            if (isPaused) {
+                startTime = Date.now();
+                isPaused = false;
+                document.getElementById('pauseBtn').textContent = '一時停止';
+            } else {
+                pausedTime += Date.now() - startTime;
+                isPaused = true;
+                document.getElementById('pauseBtn').textContent = '再開';
+            }
+        }
+
+        function endStudy() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            const endTime = new Date();
+            const startCookie = getCookie('studyStartTime');
+            
+            if (startCookie) {
+                const start = new Date(startCookie);
+                // 実際の勉強時間（一時停止時間を除外）
+                const actualStudyTime = isPaused ? pausedTime : (Date.now() - startTime + pausedTime);
+                
+                // 履歴を保存
+                let history = getCookie('studyHistory');
+                history = history ? JSON.parse(history) : [];
+                history.unshift({
+                    start: start.toISOString(),
+                    end: endTime.toISOString(),
+                    duration: actualStudyTime
+                });
+                // 無制限で保存
+                setCookie('studyHistory', JSON.stringify(history));
+                
+                document.getElementById('sessionInfo').innerHTML = 
+                    `開始時刻: ${formatDateTime(start)}<br>終了時刻: ${formatDateTime(endTime)}<br>学習時間: ${formatTime(actualStudyTime)}`;
+            }
+            
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('pauseBtn').classList.add('hidden');
+            document.getElementById('endBtn').classList.add('hidden');
+            document.getElementById('pauseBtn').textContent = '一時停止';
+            
+            startTime = null;
+            pausedTime = 0;
+            isPaused = false;
+        }
+
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            
+            let history = getCookie('studyHistory');
+            history = history ? JSON.parse(history) : [];
+            
+            // 検索フィルター
+            if (searchTerm) {
+                history = history.filter(item => {
+                    const start = new Date(item.start);
+                    const end = new Date(item.end);
+                    const dateStr = formatDate(start).toLowerCase();
+                    const startTimeStr = formatDateTime(start).toLowerCase();
+                    const endTimeStr = formatDateTime(end).toLowerCase();
+                    
+                    return dateStr.includes(searchTerm) || 
+                           startTimeStr.includes(searchTerm) || 
+                           endTimeStr.includes(searchTerm);
+                });
+            }
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="empty-state">学習記録がありません</div>';
+                return;
+            }
+            
+            historyList.innerHTML = history.map(item => {
+                const start = new Date(item.start);
+                const end = new Date(item.end);
+                return `
+                    <div class="history-item">
+                        <div class="history-item-date">${formatDate(start)}</div>
+                        <div class="history-item-time">
+                            開始: ${formatDateTime(start)}<br>
+                            終了: ${formatDateTime(end)}
+                        </div>
+                        <div class="history-item-duration">学習時間: ${formatTime(item.duration)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            if (confirm('すべての学習記録を削除しますか?')) {
+                setCookie('studyHistory', JSON.stringify([]));
+                loadHistory();
+            }
+        }
+
+        // 初期化
+        window.onload = function() {
+            const theme = getCookie('theme');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (theme === 'dark') {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+                themeIcon.src = 'sun.webp';
+                themeIcon.alt = 'ライトモードに切り替え';
+            }
+            
+            let history = getCookie('studyHistory');
+            history = history ? JSON.parse(history) : [];
+            if (history.length > 0) {
+                const last = history[0];
+                const start = new Date(last.start);
+                const end = new Date(last.end);
+                document.getElementById('sessionInfo').innerHTML = 
+                    `前回の学習<br>開始: ${formatDateTime(start)} / 終了: ${formatDateTime(end)}<br>学習時間: ${formatTime(last.duration)}`;
+            }
+        };
+    </script>
+</body>
+</html>

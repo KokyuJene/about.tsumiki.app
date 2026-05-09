@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ツミキappのバージョン履歴・変更点一覧。">
+<title>Changelog — ツミキapp</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-color: #9db4c8;
+  --primary-hover: #8ba4b8;
+  --primary-color-dark: #7a95ab;
+  --bg-light: #f8f9fb;
+  --bg-dark: #17181d;
+  --panel-light: #f0f2f7;
+  --panel-light-hover: #e6e8ed;
+  --panel-light-border: #dfe1e6;
+  --panel-dark: #252a38;
+  --panel-dark-2: #3d4454;
+
+  --tag-add:    #a8c9a8; --tag-add-bg:    rgba(168,201,168,.18);
+  --tag-fix:    #d9b4a0; --tag-fix-bg:    rgba(217,180,160,.18);
+  --tag-change: #b8a8c9; --tag-change-bg: rgba(184,168,201,.18);
+  --tag-remove: #d9a8a8; --tag-remove-bg: rgba(217,168,168,.18);
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Jost','Zen Kaku Gothic Antique',system-ui,sans-serif; font-weight:400; }
+body { background:var(--bg-light); color:#323232; transition:background .3s,color .3s; }
+body.dark { background:var(--bg-dark); color:#e8e8e8; }
+a { color:inherit; text-decoration:none; }
+
+/* TOP BUTTONS */
+.top-buttons { position:fixed; top:20px; right:20px; display:flex; gap:10px; z-index:1000; }
+.icon-btn {
+  width:50px; height:50px; border-radius:24px;
+  display:flex; align-items:center; justify-content:center;
+  border:none; cursor:pointer; transition:all .2s; padding:10px;
+  background:var(--panel-light);
+}
+body.dark .icon-btn { background:var(--panel-dark); }
+.icon-btn svg { width:22px; height:22px; stroke:#323232; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+body.dark .icon-btn svg { stroke:#e8e8e8; }
+
+/* WRAPPER */
+.wrapper { max-width:760px; margin:0 auto; padding:80px 20px 60px; }
+
+/* PAGE HEADER */
+.page-header { text-align:center; margin-bottom:56px; }
+.page-header .logo-link img { width:clamp(120px,28vw,160px); height:auto; margin-bottom:28px; }
+.page-header h1 { font-size:1.8rem; letter-spacing:1px; margin-bottom:10px; }
+.page-header p { font-size:.92rem; opacity:.6; line-height:1.8; }
+
+/* NAV */
+.nav-pills { display:flex; gap:8px; justify-content:center; margin-bottom:48px; flex-wrap:wrap; }
+.nav-pill {
+  padding:9px 22px; border-radius:24px; font-size:.88rem; border:none;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+  background:var(--panel-light); color:#323232; text-decoration:none; display:inline-block;
+}
+body.dark .nav-pill { background:var(--panel-dark); color:#e8e8e8; }
+.nav-pill:hover, .nav-pill.active { background:var(--primary-color); color:#fff; }
+body.dark .nav-pill:hover, body.dark .nav-pill.active { background:var(--primary-color-dark); }
+
+/* TIMELINE */
+.timeline { display:flex; flex-direction:column; gap:12px; }
+
+.cl-entry {
+  border-radius:24px; background:var(--panel-light);
+  overflow:hidden; transition:all .2s;
+}
+body.dark .cl-entry { background:var(--panel-dark); }
+
+.cl-header {
+  display:flex; align-items:center; gap:14px;
+  padding:22px 26px; cursor:pointer; user-select:none;
+}
+.cl-header:hover { background:var(--panel-light-hover); }
+body.dark .cl-header:hover { background:var(--panel-dark-2); }
+
+.cl-version {
+  font-size:1.05rem; letter-spacing:.5px; min-width:88px;
+}
+.cl-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 12px; border-radius:24px; font-size:.75rem;
+}
+.badge-major { background:rgba(157,180,200,.25); color:var(--primary-color); }
+body.dark .badge-major { color:var(--primary-color-dark); }
+.badge-minor { background:rgba(168,201,168,.2); color:#6fa86f; }
+.badge-patch { background:rgba(184,168,201,.18); color:#9a88ab; }
+
+.cl-date { font-size:.8rem; opacity:.5; margin-left:auto; font-variant-numeric:tabular-nums; }
+
+.cl-chevron {
+  width:18px; height:18px; stroke:currentColor; fill:none;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  opacity:.45; transition:transform .25s; flex-shrink:0;
+}
+.cl-entry.open .cl-chevron { transform:rotate(180deg); }
+
+.cl-body { display:none; padding:0 26px 24px; border-top:1px solid var(--panel-light-border); }
+body.dark .cl-body { border-color:var(--panel-dark-2); }
+.cl-entry.open .cl-body { display:block; }
+
+.cl-summary { font-size:.88rem; opacity:.7; line-height:1.75; margin:16px 0 20px; }
+
+.cl-items { display:flex; flex-direction:column; gap:8px; }
+.cl-item { display:flex; align-items:baseline; gap:10px; font-size:.88rem; line-height:1.65; }
+
+.cl-tag {
+  display:inline-block; padding:2px 10px; border-radius:24px;
+  font-size:.72rem; flex-shrink:0; white-space:nowrap;
+}
+.tag-add    { background:var(--tag-add-bg);    color:var(--tag-add); }
+.tag-fix    { background:var(--tag-fix-bg);    color:var(--tag-fix); }
+.tag-change { background:var(--tag-change-bg); color:var(--tag-change); }
+.tag-remove { background:var(--tag-remove-bg); color:var(--tag-remove); }
+
+.cl-item-text { opacity:.8; }
+
+/* LEGEND */
+.legend {
+  display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;
+  justify-content:center;
+}
+.legend-item { display:flex; align-items:center; gap:6px; font-size:.78rem; opacity:.7; }
+.legend-dot { width:8px; height:8px; border-radius:50%; }
+
+/* DIVIDER */
+hr { border:none; border-top:1px solid var(--panel-light-border); margin:56px 0; }
+body.dark hr { border-color:var(--panel-dark-2); }
+
+/* FOOTER */
+footer { text-align:center; font-size:.8rem; opacity:.4; padding-bottom:32px; }
+</style>
+</head>
+<body class="light">
+
+<div class="top-buttons">
+  <button class="icon-btn" onclick="toggleTheme()" aria-label="テーマ切り替え">
+    <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="sunIcon"  viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</div>
+
+<div class="wrapper">
+
+  <div class="page-header">
+    <a class="logo-link" href="https://about.tsumiki.app/">
+      <img id="siteLogo" src="https://tsumiki.app/tsumiki_logo.svg" alt="ツミキapp">
+    </a>
+    <h1>Changelog</h1>
+    <p>ツミキappの全バージョン履歴と変更点をまとめています。</p>
+  </div>
+
+  <nav class="nav-pills">
+    <a href="https://about.tsumiki.app/" class="nav-pill">HOME</a>
+    <a href="https://about.tsumiki.app/blog/" class="nav-pill">BLOG</a>
+    <span class="nav-pill active">CHANGELOG</span>
+    <a href="https://tsumiki.app/" class="nav-pill">TSUMIKI.APP</a>
+  </nav>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-add)"></div>追加</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-fix)"></div>修正</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-change)"></div>変更</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-remove)"></div>削除</div>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+
+  <hr>
+  <footer>© 2025-2026 ツミキapp / Super Hiko14 / 高級ジェネ™ All Rights Reserved.</footer>
+</div>
+
+<script>
+const VERSIONS = [
+  {
+    version: 'v1.14.0', date: '2026-05-01', type: 'minor', open: true,
+    summary: 'ロゴの追加。',
+    items: [
+      { tag:'add',    text:'ロゴを追加' },
+      { tag:'change',    text:'navの上部にあるツミキappをsvgに' },
+      { tag:'fix',    text:'ToDo優先度カラーのカスタムカラーピッカーのバグ修正' },
+    ],
+  },
+  {
+    version: 'v1.13.0', date: '2026-02-14', type: 'minor', open: true,
+    summary: '',
+    items: [
+      { tag:'change',    text:'音楽自動再生に調整を加えました(タップで自動再開の有効時間の設定項目の追加)' },
+      { tag:'change',    text:'デザインの統一' },
+      { tag:'add',    text:'ToDoリストの並び替え機能の追加' },
+      { tag:'add',    text:'ToDo優先度カラーのカスタムカラーピッカーを追加' },
+    ],
+  },
+  {
+    version: 'v1.12.0', date: '2025-12-10', type: 'major', open: true,
+    summary: 'favicon v2に変更したり、結構色々小さいですが変わりました。',
+    items: [
+      { tag:'change',    text:'favicon - v2に変更' },
+      { tag:'add',    text:'faviconにて複数の解像度に対応' },
+      { tag:'change',    text:'音楽自動再生を追加' },
+      { tag:'add',    text:'一時停止時間の記録の追加' },
+      { tag:'add',    text:'時刻によって変わるバーがリスト内の記録に追加(これでわかりやすく!)' },
+      { tag:'fix',    text:'音楽のゾンビバグなどを修正' },
+      { tag:'change',    text:'名称をツミキからツミキappへ統合' },
+      { tag:'remove',    text:'時刻によって変わるテーマカラーの設定機能の削除' },
+    ],
+  },
+  {
+    version: 'v1.11.0', date: '2025-10-18', type: 'minor', open: false,
+    summary: '独自ドメインへの移行',
+    items: [
+      { tag:'change',    text:'https://tsumiki.app ドメインを購入/移行' },
+      { tag:'add',    text:'時刻によって変わるテーマカラーの設定機能の追加' },
+    ],
+  },
+  {
+    version: 'v1.05.0-v1.10.0', date: '2025.11.30', type: 'major', open: false,
+    summary: '同じくまとめさせてもらいます...!',
+    items: [
+      { tag:'add', text:'カスタムポップアップ追加' },
+      { tag:'add', text:'このサイトについてポップアップを追加' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'データのエクスポート/インポートの追加' },
+      { tag:'add', text:'ガイドの追加' },
+      { tag:'', text:'---' },
+      { tag:'change', text:'チュートリアルの日本語の修正' },
+      { tag:'', text:'---' },
+      { tag:'change', text:'ToDoの大幅進化(繰り返し機能, 優先度追加)' },
+      { tag:'fix', text:'iOS等でToDoが追加できない問題の修正' },
+      { tag:'add', text:'グラフ機能の追加' },
+      { tag:'', text:'---' },
+      { tag:'change', text:'再生ボタンなどのアイコンの色味の調整(<a href="https://github.com/KokyuJene/kokyujene.github.io/commit/d35e74c8ae82b0858810775be1843f146a0ac1e7#diff-d5190905b2090c0c7a252febb3da6c70415137953b4787c02958c4d2d006540e" target="_blank" style="text-decoration: underline;">違いはこちら</a>)' },
+      { tag:'add', text:'英語対応' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'フォント17種類追加' },
+      { tag:'add', text:'タイマー作動中の設定ボタン無効化を追加' },
+      { tag:'add', text:'サイトアクセス時のアニメーション追加' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'ToDo V2登場(カレンダー, 進行度などなど...)' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'フォーカスモード(ポモドーロテクニック)を追加' },
+      { tag:'', text:'---' },
+      { tag:'change', text:'tools.super-hiko14.com/study/に移行' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'音楽でプレイリスト機能を追加(気分で音楽のプレイリストを変更できます)' },
+      { tag:'', text:'メモ: ちなみにこれらは当時呼んでいたバージョンとは少し違います。ここまでは当時のバージョン名称でいう10.0までまとめました。' },
+    ],
+  },
+  {
+    version: 'v1.00.0-v1.05.0', date: '2025.11.30', type: 'major', open: false,
+    summary: '都合上まとめさせてもらいます...!',
+    items: [
+      { tag:'add', text:'ストップウォッチ形式のタイマー機能' },
+      { tag:'add', text:'一時停止/再開に対応' },
+      { tag:'add', text:'履歴リスト' },
+      { tag:'add', text:'ダークモード対応' },
+      { tag:'add', text:'ローカルストレージ保存' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'統計機能の追加' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'設定画面の追加' },
+      { tag:'add', text:'テーマ6色追加' },
+      { tag:'add', text:'favicon - v1を追加' },
+      { tag:'', text:'---' },
+      { tag:'add', text:'音楽機能追加(ループ, 前/次, ループ, シャッフル, .mp3,.wav,.flac,.m4a,.aac,.ogg,.webm対応, 音量調整機能搭載)' },
+      { tag:'add', text:'ToDo機能追加(完了か否か, 削除機能のみ)' },
+      { tag:'', text:'---' },
+      { tag:'change', text:'テーマカラーCSSの整理' },
+      { tag:'add', text:'音楽のフォルダインポート対応' },
+      { tag:'fix', text:'音楽機能の動画やexeファイルをインポートできた問題を修正' },
+      { tag:'', text:'---' },
+      { tag:'change', text:'デザイン刷新(テーマカラー)' },
+      { tag:'', text:'メモ: ちなみにこれらは当時呼んでいたバージョンとは少し違います。ここまでは当時のバージョン名称でいう5.0までまとめました。' },
+    ],
+  },
+];
+
+function badgeClass(type) {
+  return type === 'major' ? 'badge-major' : type === 'minor' ? 'badge-minor' : 'badge-patch';
+}
+function badgeLabel(type) {
+  return type === 'major' ? 'Major' : type === 'minor' ? 'Minor' : 'Patch';
+}
+function tagClass(tag) {
+  return 'tag-' + tag;
+}
+function tagLabel(tag) {
+  return { add:'追加', fix:'修正', change:'変更', remove:'削除' }[tag] || tag;
+}
+
+function render() {
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = VERSIONS.map((v, i) => `
+    <div class="cl-entry${v.open ? ' open' : ''}" id="entry-${i}">
+      <div class="cl-header" onclick="toggle(${i})">
+        <span class="cl-version">${v.version}</span>
+        <span class="cl-badge ${badgeClass(v.type)}">${badgeLabel(v.type)}</span>
+        <span class="cl-date">${v.date}</span>
+        <svg class="cl-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="cl-body">
+        <p class="cl-summary">${v.summary}</p>
+        <div class="cl-items">
+          ${v.items.map(item => `
+            <div class="cl-item">
+              <span class="cl-tag ${tagClass(item.tag)}">${tagLabel(item.tag)}</span>
+              <span class="cl-item-text">${item.text}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggle(i) {
+  document.getElementById('entry-' + i).classList.toggle('open');
+}
+
+function toggleTheme() {
+  const dark = document.body.classList.toggle('dark');
+  document.body.classList.toggle('light', !dark);
+  document.getElementById('moonIcon').style.display = dark ? 'none' : '';
+  document.getElementById('sunIcon').style.display  = dark ? '' : 'none';
+  document.getElementById('siteLogo').src = dark
+    ? 'https://tsumiki.app/tsumiki_logo_akarui.svg'
+    : 'https://tsumiki.app/tsumiki_logo.svg';
+}
+
+render();
+</script>
+</body>
+</html>

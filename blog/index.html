@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ツミキappの開発ブログ。アップデート情報や使い方のヒントを発信しています。">
+<title>Blog — ツミキapp</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-color: #9db4c8;
+  --primary-hover: #8ba4b8;
+  --primary-color-dark: #7a95ab;
+  --bg-light: #f8f9fb;
+  --bg-dark: #17181d;
+  --panel-light: #f0f2f7;
+  --panel-light-hover: #e6e8ed;
+  --panel-light-border: #dfe1e6;
+  --panel-dark: #252a38;
+  --panel-dark-2: #3d4454;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Jost','Zen Kaku Gothic Antique',system-ui,sans-serif; font-weight:400; }
+body { background:var(--bg-light); color:#323232; transition:background .3s,color .3s; }
+body.dark { background:var(--bg-dark); color:#e8e8e8; }
+a { color:inherit; text-decoration:none; }
+
+/* TOP BUTTONS */
+.top-buttons { position:fixed; top:20px; right:20px; display:flex; gap:10px; z-index:1000; }
+.icon-btn {
+  width:50px; height:50px; border-radius:24px;
+  display:flex; align-items:center; justify-content:center;
+  border:none; cursor:pointer; transition:all .2s; padding:10px;
+  background:var(--panel-light);
+}
+body.dark .icon-btn { background:var(--panel-dark); }
+.icon-btn svg { width:22px; height:22px; stroke:#323232; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+body.dark .icon-btn svg { stroke:#e8e8e8; }
+
+/* WRAPPER */
+.wrapper { max-width:760px; margin:0 auto; padding:80px 20px 60px; }
+
+/* PAGE HEADER */
+.page-header { text-align:center; margin-bottom:56px; }
+.page-header .logo-link img { width:clamp(120px,28vw,160px); height:auto; margin-bottom:28px; }
+.page-header h1 { font-size:1.8rem; letter-spacing:1px; margin-bottom:10px; }
+.page-header p { font-size:.92rem; opacity:.6; line-height:1.8; }
+
+/* NAV PILLS */
+.nav-pills { display:flex; gap:8px; justify-content:center; margin-bottom:48px; flex-wrap:wrap; }
+.nav-pill {
+  padding:9px 22px; border-radius:24px; font-size:.88rem; border:none;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+  background:var(--panel-light); color:#323232;
+  text-decoration:none; display:inline-block;
+}
+body.dark .nav-pill { background:var(--panel-dark); color:#e8e8e8; }
+.nav-pill:hover, .nav-pill.active {
+  background:var(--primary-color); color:#fff;
+}
+body.dark .nav-pill:hover, body.dark .nav-pill.active {
+  background:var(--primary-color-dark);
+}
+
+/* BLOG CARDS */
+.blog-grid { display:flex; flex-direction:column; gap:14px; }
+
+/* BLOG DETAIL */
+.blog-detail { display:none; padding:26px 28px; border-radius:24px; background:var(--panel-light); }
+body.dark .blog-detail { background:var(--panel-dark); }
+.blog-detail h2 { font-size:1.3rem; line-height:1.6; margin:10px 0 16px; }
+.blog-detail p { font-size:.92rem; opacity:.75; line-height:1.9; margin-bottom:14px; }
+.detail-back { display:inline-flex; align-items:center; gap:6px; font-size:.85rem; color:var(--primary-color); margin-bottom:10px; }
+body.dark .detail-back { color:var(--primary-color-dark); }
+
+.blog-card {
+  display:flex; flex-direction:column; gap:10px;
+  padding:26px 28px; border-radius:24px;
+  background:var(--panel-light); transition:all .2s; cursor:pointer;
+  text-decoration:none; color:inherit;
+}
+body.dark .blog-card { background:var(--panel-dark); }
+.blog-card:hover { background:var(--panel-light-hover); transform:translateY(-1px); }
+body.dark .blog-card:hover { background:var(--panel-dark-2); }
+
+.blog-card-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.blog-date { font-size:.8rem; opacity:.55; font-variant-numeric:tabular-nums; }
+.blog-tag {
+  display:inline-block; padding:3px 11px; border-radius:24px;
+  font-size:.75rem; background:rgba(157,180,200,.22); color:var(--primary-color);
+}
+body.dark .blog-tag { background:rgba(122,149,171,.25); color:var(--primary-color-dark); }
+
+.blog-card h2 { font-size:1.05rem; font-weight:400; line-height:1.55; }
+.blog-card p { font-size:.88rem; opacity:.65; line-height:1.75; }
+
+.blog-card-footer { display:flex; align-items:center; justify-content:flex-end; }
+.read-more {
+  font-size:.82rem; color:var(--primary-color); display:flex; align-items:center; gap:4px;
+}
+body.dark .read-more { color:var(--primary-color-dark); }
+.read-more svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+/* EMPTY STATE */
+.empty-state { text-align:center; padding:60px 0; opacity:.45; font-size:.95rem; line-height:2; }
+
+/* DIVIDER */
+hr { border:none; border-top:1px solid var(--panel-light-border); margin:56px 0; }
+body.dark hr { border-color:var(--panel-dark-2); }
+
+/* FOOTER */
+footer { text-align:center; font-size:.8rem; opacity:.4; padding-bottom:32px; }
+</style>
+</head>
+<body class="light">
+
+<div class="top-buttons">
+  <button class="icon-btn" onclick="toggleTheme()" aria-label="テーマ切り替え">
+    <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="sunIcon"  viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</div>
+
+<div class="wrapper">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <a class="logo-link" href="https://about.tsumiki.app/">
+      <img id="siteLogo" src="https://tsumiki.app/tsumiki_logo.svg" alt="ツミキapp">
+    </a>
+    <h1>Blog</h1>
+    <p>開発の裏側・アップデート情報・使い方のヒントなどを発信しています。</p>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav-pills">
+    <a href="https://about.tsumiki.app/" class="nav-pill">HOME</a>
+    <span class="nav-pill active">BLOG</span>
+    <a href="https://about.tsumiki.app/changelog/" class="nav-pill">CHANGELOG</a>
+    <a href="https://tsumiki.app/" class="nav-pill">TSUMIKI.APP</a>
+  </nav>
+
+  <!-- FILTER (tag buttons) -->
+  <div class="nav-pills" style="margin-bottom:32px;" id="tagFilter">
+    <button class="nav-pill active" onclick="filterTag('all',this)">すべて</button>
+    <button class="nav-pill" onclick="filterTag('update',this)">アップデート</button>
+    <button class="nav-pill" onclick="filterTag('tips',this)">使い方</button>
+    <button class="nav-pill" onclick="filterTag('dev',this)">開発日誌</button>
+  </div>
+
+  <!-- BLOG CARDS -->
+  <div class="blog-grid" id="blogGrid"></div>
+  <div class="blog-detail" id="blogDetail"></div>
+
+  <hr>
+  <footer>© 2025-2026 ツミキapp / Super Hiko14 / 高級ジェネ™ All Rights Reserved.</footer>
+</div>
+
+<script>
+let POSTS = [];
+let currentTag = 'all';
+let postsLoadError = '';
+const baseDir = location.pathname.endsWith('/')
+  ? location.pathname
+  : location.pathname.replace(/\/[^\/]*$/, '/');
+const basePath = baseDir;
+
+function renderPosts(tag) {
+  const grid = document.getElementById('blogGrid');
+  if (postsLoadError) {
+    grid.innerHTML = `<div class="empty-state">${postsLoadError}</div>`;
+    return;
+  }
+  const filtered = tag === 'all' ? POSTS : POSTS.filter(p => p.tag === tag);
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-state">記事がまだありません。<br>近日公開予定です。</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(p => `
+    <a class="blog-card" href="${buildPostUrl(p.id)}" data-post-id="${p.id}">
+      <div class="blog-card-meta">
+        <span class="blog-date">${p.date}</span>
+        <span class="blog-tag">${p.tagLabel}</span>
+      </div>
+      <h2>${p.title}</h2>
+      <p>${p.excerpt}</p>
+      <div class="blog-card-footer">
+        <span class="read-more">続きを読む <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+    </a>
+  `).join('');
+}
+
+function renderPostDetail(postId) {
+  const detail = document.getElementById('blogDetail');
+  if (postsLoadError) {
+    detail.innerHTML = `<div class="empty-state">${postsLoadError}</div>`;
+    return;
+  }
+  const post = POSTS.find(p => p.id === postId);
+  if (!post) {
+    detail.innerHTML = '<div class="empty-state">指定された記事が見つかりません。</div>';
+    return;
+  }
+  const bodyHtml = post.contentHtml
+    ? post.contentHtml
+    : (post.content || []).map(line => `<p>${line}</p>`).join('');
+  detail.innerHTML = `
+    <a class="detail-back" href="${basePath}">← 一覧に戻る</a>
+    <div class="blog-card-meta">
+      <span class="blog-date">${post.date}</span>
+      <span class="blog-tag">${post.tagLabel}</span>
+    </div>
+    <h2>${post.title}</h2>
+    ${bodyHtml}
+  `;
+}
+
+function showListView() {
+  document.getElementById('blogGrid').style.display = '';
+  document.getElementById('tagFilter').style.display = '';
+  document.getElementById('blogDetail').style.display = 'none';
+  renderPosts(currentTag);
+}
+
+function showDetailView(postId) {
+  document.getElementById('blogGrid').style.display = 'none';
+  document.getElementById('tagFilter').style.display = 'none';
+  const detail = document.getElementById('blogDetail');
+  detail.style.display = '';
+  renderPostDetail(postId);
+}
+
+function getPostIdFromUrl() {
+  const params = new URLSearchParams(location.search);
+  return params.get('post');
+}
+
+function buildPostUrl(postId) {
+  return `${basePath}?post=${encodeURIComponent(postId)}`;
+}
+
+function openPost(postId) {
+  history.pushState({}, '', buildPostUrl(postId));
+  showDetailView(postId);
+}
+
+function filterTag(tag, btn) {
+  currentTag = tag;
+  document.querySelectorAll('#tagFilter .nav-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPosts(tag);
+}
+
+function toggleTheme() {
+  const dark = document.body.classList.toggle('dark');
+  document.body.classList.toggle('light', !dark);
+  document.getElementById('moonIcon').style.display = dark ? 'none' : '';
+  document.getElementById('sunIcon').style.display  = dark ? '' : 'none';
+  document.getElementById('siteLogo').src = dark
+    ? 'https://tsumiki.app/tsumiki_logo_akarui.svg'
+    : 'https://tsumiki.app/tsumiki_logo.svg';
+}
+
+async function initBlog() {
+  const detail = document.getElementById('blogDetail');
+  detail.style.display = '';
+  detail.innerHTML = '<div class="empty-state">読み込み中...</div>';
+  try {
+    const postsUrl = new URL('posts.json', location.href).toString();
+    const res = await fetch(postsUrl, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    POSTS = Array.isArray(data) ? data : (data.posts || []);
+    postsLoadError = '';
+  } catch (err) {
+    POSTS = [];
+    postsLoadError = 'posts.json の読み込みに失敗しました。URLを確認してください。';
+  }
+  const initialId = getPostIdFromUrl();
+  if (initialId) {
+    showDetailView(initialId);
+    return;
+  }
+  showListView();
+}
+
+document.getElementById('blogGrid').addEventListener('click', (e) => {
+  const card = e.target.closest('.blog-card');
+  if (!card) return;
+  e.preventDefault();
+  const postId = card.getAttribute('data-post-id');
+  if (postId) openPost(postId);
+});
+
+document.getElementById('blogDetail').addEventListener('click', (e) => {
+  const backLink = e.target.closest('.detail-back');
+  if (!backLink) return;
+  e.preventDefault();
+  history.pushState({}, '', basePath);
+  showListView();
+});
+
+window.addEventListener('popstate', () => {
+  const postId = getPostIdFromUrl();
+  if (postId) {
+    showDetailView(postId);
+  } else {
+    showListView();
+  }
+});
+
+initBlog();
+</script>
+</body>
+</html>
