@@ -132,7 +132,7 @@ function bindBlogEvents() {
 
 const CHANGELOG_VERSIONS = [
   {
-    version: 'v1.14.0', date: '2026-05-01', type: 'minor', open: true,
+    version: 'v1.14.0', date: '2026.05.08', type: 'minor', open: true,
     summary: 'ロゴの追加。',
     items: [
       { tag:'add',    text:'ロゴを追加' },
@@ -141,7 +141,7 @@ const CHANGELOG_VERSIONS = [
     ],
   },
   {
-    version: 'v1.13.0', date: '2026-02-14', type: 'minor', open: true,
+    version: 'v1.13.0', date: '2026.04.30', type: 'minor', open: true,
     summary: '',
     items: [
       { tag:'change',    text:'音楽自動再生に調整を加えました(タップで自動再開の有効時間の設定項目の追加)' },
@@ -151,7 +151,7 @@ const CHANGELOG_VERSIONS = [
     ],
   },
   {
-    version: 'v1.12.0', date: '2025-12-10', type: 'major', open: true,
+    version: 'v1.12.0', date: '2026.4.25', type: 'major', open: true,
     summary: 'favicon v2に変更したり、結構色々小さいですが変わりました。',
     items: [
       { tag:'change',    text:'favicon - v2に変更' },
@@ -165,7 +165,7 @@ const CHANGELOG_VERSIONS = [
     ],
   },
   {
-    version: 'v1.11.0', date: '2025-10-18', type: 'minor', open: false,
+    version: 'v1.11.0', date: '2025.4.7', type: 'minor', open: false,
     summary: '独自ドメインへの移行',
     items: [
       { tag:'change',    text:'https://tsumiki.app ドメインを購入/移行' },
@@ -173,7 +173,7 @@ const CHANGELOG_VERSIONS = [
     ],
   },
   {
-    version: 'v1.05.0-v1.10.0', date: '2025.11.30', type: 'major', open: false,
+    version: 'v1.05.0-v1.10.0', date: '2025.12.14-2026.3.24', type: 'major', open: false,
     summary: '同じくまとめさせてもらいます...!',
     items: [
       { tag:'add', text:'カスタムポップアップ追加' },
@@ -206,7 +206,7 @@ const CHANGELOG_VERSIONS = [
     ],
   },
   {
-    version: 'v1.00.0-v1.05.0', date: '2025.11.30', type: 'major', open: false,
+    version: 'v1.00.0-v1.05.0', date: '2025.11.30-2025.12.13', type: 'major', open: false,
     summary: '都合上まとめさせてもらいます...!',
     items: [
       { tag:'add', text:'ストップウォッチ形式のタイマー機能' },
