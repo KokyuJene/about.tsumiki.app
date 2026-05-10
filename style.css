@@ -19,7 +19,7 @@
   --tag-remove: #d9a8a8; --tag-remove-bg: rgba(217,168,168,.18);
 }
 
-* { margin:0; padding:0; box-sizing:border-box; font-family: var(--font-en), var(--font-ja), system-ui, sans-serif; font-weight:400; }
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Jost', 'Zen Kaku Gothic Antique', system-ui, sans-serif; font-weight:400; }
 
 body { background:var(--bg-light); color:#323232; transition:background .3s,color .3s; }
 body.dark { background:var(--bg-dark); color:#e8e8e8; }
