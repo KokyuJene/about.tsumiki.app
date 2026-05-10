@@ -56,12 +56,10 @@ function renderBlogPosts(tag) {
     return;
   }
   grid.innerHTML = filtered.map((p, i) => {
-    const bodyHtml = p.contentHtml
-      ? p.contentHtml
-      : (p.content || []).map(line => `<p>${line}</p>`).join('');
+    const postIndex = blogPosts.indexOf(p);
     return `
-      <div class="blog-entry${p.open ? ' open' : ''}" id="post-${i}">
-        <div class="blog-header" data-post-id="${i}">
+      <div class="blog-entry" id="post-${i}">
+        <div class="blog-header" data-post-index="${postIndex}">
           <div class="blog-head-main">
             <div class="blog-meta">
               <span class="blog-tag">${p.tagLabel || ''}</span>
@@ -69,15 +67,85 @@ function renderBlogPosts(tag) {
             <div class="blog-title">${p.title}</div>
             <div class="blog-excerpt">${p.excerpt || ''}</div>
           </div>
-          <span class="blog-date">${p.date}</span>
-          <svg class="blog-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="blog-body">
-          <div class="blog-content">${bodyHtml}</div>
         </div>
       </div>
     `;
   }).join('');
+}
+
+function getBlogBodyHtml(post) {
+  return post.contentHtml
+    ? post.contentHtml
+    : (post.content || []).map(line => `<p>${line}</p>`).join('');
+}
+
+function resolveBlogPostByParam(param) {
+  const normalized = (param || '').trim();
+  if (!normalized) return null;
+  const byId = blogPosts.find(p => {
+    if (!p.id) return false;
+    const idStr = String(p.id);
+    return idStr === normalized || idStr.replace(/^0+/, '') === normalized;
+  });
+  if (byId) return { post: byId, index: blogPosts.indexOf(byId) };
+  if (/^\d+$/.test(normalized)) {
+    const index = Number(normalized) - 1;
+    if (index >= 0 && index < blogPosts.length) {
+      return { post: blogPosts[index], index };
+    }
+  }
+  return null;
+}
+
+function updateBlogQueryParam(value) {
+  const url = new URL(location.href);
+  if (value) {
+    url.searchParams.set('post', value);
+  } else {
+    url.searchParams.delete('post');
+  }
+  history.replaceState(null, '', url.toString());
+}
+
+function openBlogModal(post, index, updateUrl) {
+  const modal = document.getElementById('blogModal');
+  if (!modal) return;
+  const tag = document.getElementById('blogModalTag');
+  const date = document.getElementById('blogModalDate');
+  const title = document.getElementById('blogModalTitle');
+  const excerpt = document.getElementById('blogModalExcerpt');
+  const body = document.getElementById('blogModalBody');
+
+  if (tag) tag.textContent = post.tagLabel || '';
+  if (date) date.textContent = post.date || '';
+  if (title) title.textContent = post.title || '';
+  if (excerpt) excerpt.textContent = post.excerpt || '';
+  if (body) body.innerHTML = getBlogBodyHtml(post);
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+
+  if (updateUrl) {
+    const postParam = post.id ? String(post.id) : String(index + 1);
+    updateBlogQueryParam(postParam);
+  }
+}
+
+function closeBlogModal(updateUrl) {
+  const modal = document.getElementById('blogModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  if (updateUrl) updateBlogQueryParam('');
+}
+
+function openBlogModalFromQuery() {
+  const param = new URLSearchParams(location.search).get('post');
+  if (!param) return;
+  const result = resolveBlogPostByParam(param);
+  if (result) openBlogModal(result.post, result.index, false);
 }
 
 function toggleBlogPost(i) {
@@ -108,6 +176,7 @@ async function initBlog() {
     blogLoadError = 'posts.json の読み込みに失敗しました。URLを確認してください。';
   }
   renderBlogPosts(blogCurrentTag);
+  openBlogModalFromQuery();
 }
 
 function bindBlogEvents() {
@@ -125,8 +194,21 @@ function bindBlogEvents() {
     grid.addEventListener('click', (e) => {
       const header = e.target.closest('.blog-header');
       if (!header) return;
-      const postId = header.getAttribute('data-post-id');
-      if (postId) toggleBlogPost(postId);
+      const postIndex = Number(header.getAttribute('data-post-index'));
+      if (!Number.isNaN(postIndex) && blogPosts[postIndex]) {
+        openBlogModal(blogPosts[postIndex], postIndex, true);
+      }
+    });
+  }
+
+  const modal = document.getElementById('blogModal');
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      const closer = e.target.closest('[data-modal-close="true"]');
+      if (closer) closeBlogModal(true);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeBlogModal(true);
     });
   }
 }
