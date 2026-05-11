@@ -1,4 +1,5 @@
 const THEME_KEY = 'tsumiki_theme';
+const DEFAULT_DOC_TITLE = document.title;
 
 let blogPosts = [];
 let blogCurrentTag = 'all';
@@ -63,10 +64,15 @@ function renderBlogPosts(tag) {
           <div class="blog-head-main">
             <div class="blog-meta">
               <span class="blog-tag">${p.tagLabel || ''}</span>
+              <span class="blog-date">${p.date || ''}</span>
             </div>
             <div class="blog-title">${p.title}</div>
             <div class="blog-excerpt">${p.excerpt || ''}</div>
           </div>
+          <button class="blog-read-btn" aria-label="${p.title} を読む">
+            読む
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
         </div>
       </div>
     `;
@@ -74,10 +80,13 @@ function renderBlogPosts(tag) {
 }
 
 function getBlogBodyHtml(post) {
-  return post.contentHtml
-    ? post.contentHtml
-    : (post.content || []).map(line => `<p>${line}</p>`).join('');
+  if (post.contentHtml) return post.contentHtml;
+  return (post.content || []).map(line => {
+    const isFootnote = /"^[¹²³⁴⁵⁶⁷⁸⁹*†‡§]"/.test(line);
+    return `<p${isFootnote ? ' class="footnote"' : ''}>${line}</p>`;
+  }).join('');
 }
+
 
 function resolveBlogPostByParam(param) {
   const normalized = (param || '').trim();
@@ -107,30 +116,45 @@ function updateBlogQueryParam(value) {
   history.replaceState(null, '', url.toString());
 }
 
+const _origOpenBlogModal = typeof openBlogModal === 'function' ? openBlogModal : null;
 function openBlogModal(post, index, updateUrl) {
   const modal = document.getElementById('blogModal');
   if (!modal) return;
-  const tag = document.getElementById('blogModalTag');
-  const date = document.getElementById('blogModalDate');
-  const title = document.getElementById('blogModalTitle');
+ 
+  const tag    = document.getElementById('blogModalTag');
+  const date   = document.getElementById('blogModalDate');
+  const title  = document.getElementById('blogModalTitle');
   const excerpt = document.getElementById('blogModalExcerpt');
-  const body = document.getElementById('blogModalBody');
-
-  if (tag) tag.textContent = post.tagLabel || '';
-  if (date) date.textContent = post.date || '';
-  if (title) title.textContent = post.title || '';
+  const body   = document.getElementById('blogModalBody');
+  const closeBtn = modal.querySelector('.blog-modal-close');
+ 
+  if (tag)    tag.textContent    = post.tagLabel || '';
+  if (date)   date.textContent   = post.date || '';
+  if (title)  title.textContent  = post.title || '';
   if (excerpt) excerpt.textContent = post.excerpt || '';
-  if (body) body.innerHTML = getBlogBodyHtml(post);
-
+  if (body)   body.innerHTML     = getBlogBodyHtml(post);
+ 
+  // 戻るボタンにアイコンを追加（初回のみ）
+  if (closeBtn && !closeBtn.querySelector('svg')) {
+    closeBtn.innerHTML =
+      `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+       </svg>一覧へ戻る`;
+  }
+ 
+  if (post.title) document.title = `${post.title} — Blog — ツミキapp`;
+ 
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
-
+  modal.scrollTop = 0;
+ 
   if (updateUrl) {
     const postParam = post.id ? String(post.id) : String(index + 1);
     updateBlogQueryParam(postParam);
   }
 }
+
 
 function closeBlogModal(updateUrl) {
   const modal = document.getElementById('blogModal');
@@ -138,6 +162,7 @@ function closeBlogModal(updateUrl) {
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
+  document.title = DEFAULT_DOC_TITLE;
   if (updateUrl) updateBlogQueryParam('');
 }
 

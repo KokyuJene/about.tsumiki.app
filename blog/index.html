@@ -58,10 +58,12 @@
   <!-- BLOG CARDS -->
   <div class="blog-grid" id="blogGrid"></div>
 
+  <!-- BLOG MODAL -->
   <div class="blog-modal" id="blogModal" aria-hidden="true">
-    <div class="blog-modal-backdrop" data-modal-close="true"></div>
     <div class="blog-modal-card" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle">
-      <button class="blog-modal-close" type="button" aria-label="閉じる" data-modal-close="true">&times;</button>
+      <div class="blog-modal-top">
+        <button class="blog-modal-close" type="button" aria-label="一覧へ戻る" data-modal-close="true">一覧へ戻る</button>
+      </div>
       <div class="blog-modal-head">
         <span class="blog-modal-tag" id="blogModalTag"></span>
         <span class="blog-modal-date" id="blogModalDate"></span>
